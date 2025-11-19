@@ -1,0 +1,9 @@
+uvicorn
+fastapi
+python-multipart
+pymupdf
+langchain-openai 
+pinecone-client
+langchain-google-genai
+openai
+numpy
