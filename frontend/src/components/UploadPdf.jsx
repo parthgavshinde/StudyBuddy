@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import "./UploadPdf.css";
 const PRESET_QUERIES = [
   "Summarize the following provided text",
   "List the most important points from the text",
@@ -17,14 +17,14 @@ const UploadPDFWithQuery = () => {
   const [error, setError] = useState(null);
   const [showChunks, setShowChunks] = useState(false);
 
-  const handleFileChange = (e) => {
-    setFile(e.target.files?.[0] ?? null);
+  const handleFileChange = (event) => {
+    setFile(event.target.files?.[0] ?? null);
     setResult(null);
     setError(null);
   };
 
-  const choosePreset = (p) => {
-    setActivePreset(p);
+  const choosePreset = (preset) => {
+    setActivePreset(preset);
     setCustomQuery("");
     setResult(null);
     setError(null);
@@ -62,7 +62,6 @@ const UploadPDFWithQuery = () => {
       });
 
       if (!resp.ok) {
-        // try to read json error message
         const errBody = await resp.json().catch(() => null);
         throw new Error(
           errBody?.detail || errBody?.message || `HTTP ${resp.status}`
@@ -80,231 +79,188 @@ const UploadPDFWithQuery = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.h2}>Upload Notes (PDF) & Ask</h2>
-
-      <div style={styles.section}>
-        <label style={styles.label}>Select file</label>
-        <input
-          type="file"
-          accept=".pdf"
-          onChange={handleFileChange}
-          disabled={uploading}
-        />
-        {file && <div style={styles.selected}>Selected: {file.name}</div>}
-      </div>
-
-      <div style={styles.section}>
-        <label style={styles.label}>Quick questions (tap to select)</label>
-        <div style={styles.presetWrap}>
-          {PRESET_QUERIES.map((p) => {
-            const active = p === activePreset && customQuery.trim() === "";
-            return (
-              <button
-                key={p}
-                onClick={() => choosePreset(p)}
-                disabled={uploading}
-                style={{
-                  ...styles.presetBtn,
-                  ...(active ? styles.presetBtnActive : {}),
-                }}
-              >
-                {p}
-              </button>
-            );
-          })}
+    <div className="upload-page">
+      <div className="section-heading">
+        <div>
+          <span className="section-kicker">Workspace</span>
+          <h2>Upload Notes and Ask Better Study Questions</h2>
+          <p>
+            The backend flow stays the same. This frontend now follows the style
+            of your provided reference with a clearer study dashboard layout.
+          </p>
+        </div>
+        <div className="status-pills">
+          <span className="status-pill">
+            File: {file ? "Selected" : "Waiting"}
+          </span>
+          <span className="status-pill">
+            Query: {customQuery.trim() ? "Custom" : "Preset"}
+          </span>
         </div>
       </div>
 
-      <div style={styles.section}>
-        <label style={styles.label}>Or type a custom question</label>
-        <input
-          value={customQuery}
-          onChange={(e) => {
-            setCustomQuery(e.target.value);
-            // Do not clear preset; but selected query will be custom when typed
-            setResult(null);
-            setError(null);
-          }}
-          placeholder="e.g. Create 5 short revision questions from this text"
-          disabled={uploading}
-          style={styles.input}
-        />
-        <div style={styles.hint}>
-          Using a custom query overrides the preset selection.
-        </div>
-      </div>
+      <div className="workspace-grid">
+        <section className="panel upload-panel">
+          <div className="upload-area">
+            <div className="upload-icon">📘</div>
+            <h3>Choose your PDF</h3>
+            <p>
+              Select a study document and pair it with a preset prompt or your
+              own custom revision request.
+            </p>
 
-      <div style={styles.section}>
-        <button
-          onClick={handleUpload}
-          disabled={uploading}
-          style={{
-            ...styles.uploadBtn,
-            ...(uploading ? styles.uploadingBtn : {}),
-          }}
-        >
-          {uploading ? "Processing..." : "Upload & Run Query"}
-        </button>
-      </div>
+            <label className="file-input-label" htmlFor="pdf-upload">
+              Select PDF
+            </label>
+            <input
+              id="pdf-upload"
+              className="file-input"
+              type="file"
+              accept=".pdf"
+              onChange={handleFileChange}
+              disabled={uploading}
+            />
 
-      {error && (
-        <div style={styles.errorBox}>
-          <strong>Error:</strong> {error}
-        </div>
-      )}
-
-      {result && (
-        <div style={styles.resultBox}>
-          <div style={styles.resultHeader}>
-            <h3 style={{ margin: 0 }}>Result</h3>
-            <div style={styles.meta}>
-              <span style={styles.metaItem}>
-                Chunks: {result.num_chunks ?? "—"}
-              </span>
-              <span style={styles.metaItem}>Top-K: {result.top_k ?? "—"}</span>
-            </div>
-          </div>
-
-          <div style={styles.answerSection}>
-            <h4 style={styles.sub}>Answer</h4>
-            <div style={styles.answer}>{result.answer ?? "No answer."}</div>
-          </div>
-
-          <div style={styles.chunksSection}>
-            <div style={styles.chunksHeader}>
-              <h4 style={styles.sub}>Selected chunks (top {result.top_k})</h4>
-              <button
-                onClick={() => setShowChunks((s) => !s)}
-                style={styles.smallBtn}
-              >
-                {showChunks ? "Hide" : "Show"}
-              </button>
-            </div>
-
-            {showChunks && (
-              <>
-                {Array.isArray(result.selected_chunks) &&
-                  result.selected_chunks.length > 0 ? (
-                  result.selected_chunks.map((c, idx) => (
-                    <div key={idx} style={styles.chunkCard}>
-                      <div style={styles.chunkHeader}>
-                        <strong>Chunk #{idx + 1}</strong>
-                        <span style={styles.score}>
-                          Score:{" "}
-                          {Array.isArray(result.top_scores)
-                            ? Number(result.top_scores[idx]).toFixed(3)
-                            : "—"}
-                        </span>
-                      </div>
-                      <div style={styles.chunkText}>{c}</div>
-                    </div>
-                  ))
-                ) : (
-                  <div style={styles.muted}>No chunks available.</div>
-                )}
-              </>
+            {file && (
+              <div className="file-info">
+                <strong>{file.name}</strong>
+              </div>
             )}
           </div>
-        </div>
-      )}
+
+          <div className="query-block">
+            <label className="field-label">Quick questions</label>
+            <div className="preset-grid">
+              {PRESET_QUERIES.map((preset) => {
+                const active =
+                  preset === activePreset && customQuery.trim() === "";
+
+                return (
+                  <button
+                    key={preset}
+                    type="button"
+                    className={`preset-chip${active ? " active" : ""}`}
+                    onClick={() => choosePreset(preset)}
+                    disabled={uploading}
+                  >
+                    {preset}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="query-block">
+            <label className="field-label" htmlFor="custom-query">
+              Or type a custom question
+            </label>
+            <input
+              id="custom-query"
+              className="query-input"
+              value={customQuery}
+              onChange={(event) => {
+                setCustomQuery(event.target.value);
+                setResult(null);
+                setError(null);
+              }}
+              placeholder="e.g. Create 5 short revision questions from this text"
+              disabled={uploading}
+            />
+            <p className="field-hint">
+              A custom query overrides the preset selection for this run.
+            </p>
+          </div>
+
+          <div className="action-buttons">
+            <button
+              type="button"
+              className="primary-button"
+              onClick={handleUpload}
+              disabled={uploading}
+            >
+              {uploading ? "Processing..." : "Upload & Run Query"}
+            </button>
+          </div>
+
+          {error && (
+            <div className="error-box">
+              <strong>Error:</strong> {error}
+            </div>
+          )}
+        </section>
+
+        <section className="panel result-panel">
+          <div className="result-header">
+            <div>
+              <span className="section-kicker">Output</span>
+              <h3>Generated Answer</h3>
+            </div>
+            <div className="result-meta">
+              <span className="meta-item">
+                Chunks: {result?.num_chunks ?? "—"}
+              </span>
+              <span className="meta-item">Top-K: {result?.top_k ?? "—"}</span>
+            </div>
+          </div>
+
+          {result ? (
+            <>
+              <div className="summary-box">
+                <h4>Answer</h4>
+                <div className="summary-text">{result.answer ?? "No answer."}</div>
+              </div>
+
+              <div className="chunks-section">
+                <div className="chunks-header">
+                  <h4>Selected chunks</h4>
+                  <button
+                    type="button"
+                    className="secondary-button"
+                    onClick={() => setShowChunks((shown) => !shown)}
+                  >
+                    {showChunks ? "Hide Chunks" : "Show Chunks"}
+                  </button>
+                </div>
+
+                {showChunks && (
+                  <div className="chunks-list">
+                    {Array.isArray(result.selected_chunks) &&
+                    result.selected_chunks.length > 0 ? (
+                      result.selected_chunks.map((chunk, index) => (
+                        <article key={index} className="chunk-card">
+                          <div className="chunk-header">
+                            <strong>Chunk #{index + 1}</strong>
+                            <span className="meta-item">
+                              Score:{" "}
+                              {Array.isArray(result.top_scores)
+                                ? Number(result.top_scores[index]).toFixed(3)
+                                : "—"}
+                            </span>
+                          </div>
+                          <p>{chunk}</p>
+                        </article>
+                      ))
+                    ) : (
+                      <p className="empty-state">No chunks available.</p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="empty-result">
+              <div className="empty-illustration">🧠</div>
+              <h4>Your answer will appear here</h4>
+              <p>
+                Upload a PDF and run a query to see the response and the most
+                relevant extracted chunks.
+              </p>
+            </div>
+          )}
+        </section>
+      </div>
     </div>
   );
-};
-
-/* ---------- simple inline styles (adjust to taste) ---------- */
-const styles = {
-  container: {
-    padding: 20,
-    maxWidth: 900,
-    margin: "20px auto",
-    fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, Arial",
-  },
-  h2: { marginBottom: 12 },
-  section: { marginBottom: 16 },
-  label: { display: "block", fontWeight: 600, marginBottom: 8 },
-  selected: { marginTop: 8, color: "#333" },
-  presetWrap: { display: "flex", gap: 8, flexWrap: "wrap" },
-  presetBtn: {
-    padding: "8px 12px",
-    borderRadius: 6,
-    border: "1px solid #ddd",
-    background: "white",
-    cursor: "pointer",
-  },
-  presetBtnActive: {
-    background: "#007bff",
-    color: "white",
-    borderColor: "#007bff",
-  },
-  input: {
-    width: "100%",
-    padding: "10px 12px",
-    borderRadius: 6,
-    border: "1px solid #ddd",
-  },
-  hint: { marginTop: 6, color: "#666", fontSize: 13 },
-  uploadBtn: {
-    padding: "12px 18px",
-    borderRadius: 8,
-    background: "#0b74f6",
-    color: "white",
-    border: "none",
-    cursor: "pointer",
-    fontWeight: 600,
-  },
-  uploadingBtn: { background: "#999", cursor: "not-allowed" },
-  errorBox: {
-    marginTop: 14,
-    padding: 12,
-    background: "#f8d7da",
-    color: "#721c24",
-    borderRadius: 6,
-  },
-  resultBox: {
-    marginTop: 18,
-    padding: 16,
-    borderRadius: 8,
-    background: "#f7f9fc",
-    border: "1px solid #e6eefb",
-  },
-  resultHeader: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    marginBottom: 12,
-  },
-  meta: { display: "flex", gap: 12, alignItems: "center" },
-  metaItem: { fontSize: 13, color: "#555" },
-  answerSection: { marginBottom: 12 },
-  sub: { margin: "6px 0" },
-  answer: {
-    padding: 12,
-    background: "white",
-    borderRadius: 6,
-    border: "1px solid #eee",
-    minHeight: 40,
-  },
-  chunksSection: {},
-  chunksHeader: { display: "flex", justifyContent: "space-between", alignItems: "center" },
-  smallBtn: {
-    padding: "6px 8px",
-    borderRadius: 6,
-    border: "1px solid #ddd",
-    background: "white",
-    cursor: "pointer",
-  },
-  chunkCard: {
-    marginTop: 8,
-    padding: 10,
-    borderRadius: 6,
-    background: "white",
-    border: "1px solid #eee",
-  },
-  chunkHeader: { display: "flex", justifyContent: "space-between", marginBottom: 6 },
-  score: { color: "#666", fontSize: 13 },
-  chunkText: { color: "#222" },
-  muted: { color: "#666", fontStyle: "italic" },
 };
 
 export default UploadPDFWithQuery;

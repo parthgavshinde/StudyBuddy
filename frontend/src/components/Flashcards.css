@@ -1,0 +1,499 @@
+.flashcards-wrapper {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* ===== Empty State ===== */
+.empty-flashcards {
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.empty-flashcards h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+}
+
+.empty-flashcards p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+/* ===== Flashcards Panel ===== */
+.flashcards-panel {
+    background: rgba(26, 31, 46, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(16, 169, 129, 0.1);
+    border-radius: var(--border-radius-lg);
+    padding: 2.5rem;
+    box-shadow: var(--shadow-md);
+    animation: fadeInUp 0.6s var(--timing);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== Panel Header ===== */
+.flashcards-header {
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(16, 169, 129, 0.1);
+}
+
+.flashcards-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.flashcards-subtitle {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+/* ===== View Controls ===== */
+.view-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.view-btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid rgba(16, 169, 129, 0.3);
+    background: rgba(16, 169, 129, 0.05);
+    color: var(--primary-color);
+    border-radius: var(--border-radius-md);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s var(--timing);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.view-btn:hover {
+    background: rgba(16, 169, 129, 0.15);
+    transform: translateY(-2px);
+}
+
+.view-btn.active {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+/* ===== Progress Indicator ===== */
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: rgba(35, 42, 56, 0.3);
+    border-radius: var(--border-radius-md);
+    margin-bottom: 1.5rem;
+    border-left: 3px solid var(--primary-color);
+}
+
+.progress-current {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 0.95rem;
+}
+
+.progress-total {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* ===== Focus Mode (Single Card) ===== */
+.focus-mode-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.flashcard-wrapper {
+    width: 100%;
+    max-width: 500px;
+    height: 320px;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.flashcard-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.flashcard-wrapper.flipped .flashcard-inner {
+    transform: rotateY(180deg);
+}
+
+.flashcard-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius-lg);
+    padding: 2rem;
+    text-align: center;
+    border: 1px solid rgba(16, 169, 129, 0.2);
+    box-shadow: var(--shadow-lg);
+}
+
+.flashcard-face.front {
+    background: linear-gradient(135deg, rgba(26, 31, 46, 0.8), rgba(35, 42, 56, 0.8));
+    border-color: rgba(16, 169, 129, 0.3);
+}
+
+.flashcard-face.back {
+    background: linear-gradient(135deg, rgba(16, 169, 129, 0.15), rgba(16, 169, 129, 0.05));
+    border-color: var(--primary-color);
+    transform: rotateY(180deg);
+}
+
+.flashcard-text {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.flashcard-back .flashcard-text {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+}
+
+.flashcard-label {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(16, 169, 129, 0.2);
+    color: var(--primary-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--border-radius-full);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.flashcard-back .flashcard-label {
+    background: rgba(16, 169, 129, 0.3);
+}
+
+.flip-hint {
+    font-size: 0.8rem;
+    color: var(--text-tertiary);
+    margin-top: 1rem;
+    font-style: italic;
+}
+
+/* ===== Focus Mode Navigation ===== */
+.focus-navigation {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+    max-width: 500px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.focus-btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: var(--border-radius-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s var(--timing);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.focus-prev-btn {
+    background: rgba(16, 169, 129, 0.1);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+}
+
+.focus-prev-btn:hover:not(:disabled) {
+    background: rgba(16, 169, 129, 0.2);
+    transform: translateY(-2px);
+}
+
+.focus-prev-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.focus-next-btn {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    color: white;
+    box-shadow: 0 0 20px rgba(16, 169, 129, 0.3);
+}
+
+.focus-next-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(16, 169, 129, 0.5);
+}
+
+.focus-next-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ===== Overview Mode (Grid) ===== */
+.overview-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.overview-card {
+    background: rgba(35, 42, 56, 0.5);
+    border: 1px solid rgba(16, 169, 129, 0.1);
+    border-radius: var(--border-radius-lg);
+    padding: 1.5rem;
+    transition: all 0.3s var(--timing);
+    cursor: pointer;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.overview-card:hover {
+    border-color: rgba(16, 169, 129, 0.3);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+    background: rgba(35, 42, 56, 0.7);
+}
+
+.overview-card.flipped {
+    background: rgba(16, 169, 129, 0.08);
+    border-color: var(--primary-color);
+}
+
+.overview-card-label {
+    color: var(--text-tertiary);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+
+.overview-card-text {
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    flex: 1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.overview-card.flipped .overview-card-text {
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+.card-flip-indicator {
+    text-align: right;
+    color: var(--primary-color);
+    font-size: 0.8rem;
+    margin-top: 1rem;
+    opacity: 0.7;
+}
+
+/* ===== Back/Close Button ===== */
+.back-button {
+    padding: 0.75rem 1.5rem;
+    background: rgba(16, 169, 129, 0.1);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    border-radius: var(--border-radius-md);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s var(--timing);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.back-button:hover {
+    background: rgba(16, 169, 129, 0.2);
+    transform: translateY(-2px);
+}
+
+/* ===== Responsive Design ===== */
+@media (max-width: 1024px) {
+    .flashcards-panel {
+        padding: 1.5rem;
+    }
+
+    .flashcard-wrapper {
+        max-width: 450px;
+        height: 280px;
+    }
+
+    .overview-container {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .focus-navigation {
+        max-width: 450px;
+    }
+}
+
+@media (max-width: 768px) {
+    .flashcards-panel {
+        padding: 1.25rem;
+    }
+
+    .flashcard-wrapper {
+        max-width: 100%;
+        height: 250px;
+    }
+
+    .flashcard-face {
+        padding: 1.5rem;
+    }
+
+    .flashcard-text {
+        font-size: 1.1rem;
+    }
+
+    .overview-container {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .view-controls {
+        justify-content: center;
+    }
+
+    .view-btn {
+        flex: 1;
+        min-width: 140px;
+    }
+
+    .progress-info {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+    }
+
+    .focus-navigation {
+        width: 100%;
+        flex-direction: column;
+    }
+
+    .focus-btn {
+        width: 100%;
+        min-width: unset;
+    }
+}
+
+@media (max-width: 480px) {
+    .flashcards-panel {
+        padding: 1rem;
+    }
+
+    .flashcards-title {
+        font-size: 1.25rem;
+    }
+
+    .flashcard-wrapper {
+        max-width: 100%;
+        height: 220px;
+    }
+
+    .flashcard-face {
+        padding: 1rem;
+    }
+
+    .flashcard-text {
+        font-size: 0.95rem;
+    }
+
+    .flashcard-back .flashcard-text {
+        font-size: 0.9rem;
+    }
+
+    .flashcard-label {
+        font-size: 0.65rem;
+        top: 0.75rem;
+        right: 0.75rem;
+    }
+
+    .flip-hint {
+        font-size: 0.75rem;
+    }
+
+    .overview-container {
+        grid-template-columns: 1fr;
+    }
+
+    .overview-card {
+        padding: 1rem;
+        min-height: 150px;
+    }
+
+    .view-controls {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .view-btn {
+        width: 100%;
+    }
+
+    .focus-navigation {
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .focus-btn {
+        width: 100%;
+    }
+
+    .back-button {
+        width: 100%;
+    }
+}
