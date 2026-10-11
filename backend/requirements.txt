@@ -7,3 +7,4 @@ pinecone-client
 langchain-google-genai
 openai
 numpy
+python-dotenv
