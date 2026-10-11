@@ -4,6 +4,20 @@ StudyBuddy is an AI-powered study assistant that helps students learn from PDF n
 
 The project is split into a FastAPI backend for PDF processing and OpenAI-powered generation, plus a React frontend for the study dashboard experience.
 
+## Screenshots
+
+### Study Assistant Dashboard
+
+![StudyBuddy dashboard with uploaded PDF and quick study actions](docs/screenshots/study-assistant-upload.jpeg)
+
+### AI-Generated Study Answer with Podcast Mode
+
+![StudyBuddy generated answer view with podcast mode enabled](docs/screenshots/study-assistant-answer.jpeg)
+
+### Interactive Flashcards
+
+![StudyBuddy flashcard review screen](docs/screenshots/flashcards-view.jpeg)
+
 ## Features
 
 - PDF text extraction using PyMuPDF
